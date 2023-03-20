@@ -1,0 +1,1 @@
+/home/vc/code/hackathons/DiscFun/Whoope/_contract/target/types/whoopee.ts
