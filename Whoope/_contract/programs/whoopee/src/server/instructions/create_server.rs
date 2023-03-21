@@ -1,7 +1,19 @@
 use crate::prelude::*;
 use super::super::server_state::ServerState;
 
-pub fn create_server(context: Context<ACreateServer>)-> Result<()>{
+pub fn create_server(
+    context: Context<ACreateServer>,
+    name: [u8; MAX_NAME_SIZE],
+    summary: [u8; MAX_SERVER_SUMMARY_SIZE],
+)-> Result<()>{
+    let server_account = &mut context.accounts.server_account;
+
+    server_account.name = name;
+    server_account.summary = summary;
+
+    //NOTE: setting current time on creation
+    server_account.created_on = Clock::get()?.unix_timestamp;
+
     Ok(())
 }
 

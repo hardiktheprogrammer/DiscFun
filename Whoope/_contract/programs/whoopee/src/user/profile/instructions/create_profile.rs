@@ -18,6 +18,10 @@ pub fn create_profile(
     profile_account.name = name;
     profile_account.summary = summary;
 
+
+    //NOTE: setting current time on creation
+    profile_account.created_on = Clock::get()?.unix_timestamp;
+
     Ok(())
 }
 
