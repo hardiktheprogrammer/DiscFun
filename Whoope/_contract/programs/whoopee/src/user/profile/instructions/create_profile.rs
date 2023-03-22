@@ -1,23 +1,18 @@
-pub use anchor_lang::prelude::*;
 use crate::{
+    constants::{MAX_NAME_SIZE, MAX_SERVER_SUMMARY_SIZE, SEED_USER_PROFILE},
     user::profile::profile_state::ProfileState,
-    constants::{
-        MAX_NAME_SIZE, 
-        MAX_SERVER_SUMMARY_SIZE,
-        SEED_USER_PROFILE
-    }
 };
+pub use anchor_lang::prelude::*;
 
 pub fn create_profile(
     context: Context<ACreateProfile>,
     name: [u8; MAX_NAME_SIZE],
     summary: [u8; MAX_SERVER_SUMMARY_SIZE],
-)-> Result<()>{
+) -> Result<()> {
     let profile_account = &mut context.accounts.profile_account;
 
     profile_account.name = name;
     profile_account.summary = summary;
-
 
     //NOTE: setting current time on creation
     profile_account.created_on = Clock::get()?.unix_timestamp;
@@ -26,7 +21,7 @@ pub fn create_profile(
 }
 
 #[derive(Accounts)]
-pub struct ACreateProfile<'info>{
+pub struct ACreateProfile<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
