@@ -2,7 +2,7 @@ use super::super::server_state::ServerState;
 use crate::{
     _utils::parse_buffer_to_string, main_account::main_account_state::MainAccount, prelude::*,
 };
-use anchor_lang::solana_program::program::invoke;
+use anchor_lang::solana_program::program::{invoke, invoke_signed};
 use mpl_token_metadata::{
     instruction::update_metadata_accounts_v2,
     state::{Creator, DataV2, Metadata},
@@ -19,13 +19,15 @@ pub fn update_server_details(
     let admin = context.accounts.admin.to_account_info();
     let mpl_program = context.accounts.mpl_program.to_account_info();
     let metadata_account = context.accounts.metadata_account.to_account_info();
-    let master_edition_account = context.accounts.master_edition_account.to_account_info();
+    // let master_edition_account = context.accounts.master_edition_account.to_account_info();
     let main_account = &mut context.accounts.main_account;
     let system_program = context.accounts.system_program.to_account_info();
     let token_program = context.accounts.token_program.to_account_info();
 
     server_account.name = name;
     server_account.summary = summary;
+
+    let (_, _bump) = Pubkey::find_program_address(&[SEED_MAIN], &context.program_id);
 
     //NOTE: setting current time on creation
     server_account.created_on = Clock::get()?.unix_timestamp;
@@ -54,7 +56,7 @@ pub fn update_server_details(
     };
 
     //NOTE: CREATING SERVER_TOKEN as NFT:
-    invoke(
+    invoke_signed(
         &update_metadata_accounts_v2(
             mpl_program.key(),
             metadata_account.key(),
@@ -70,6 +72,7 @@ pub fn update_server_details(
             admin.to_account_info(),
             system_program.to_account_info(),
         ],
+        &[&[SEED_MAIN, &[_bump]]],
     )
     .unwrap();
 
@@ -81,17 +84,14 @@ pub struct AUpdateServerDetails<'info> {
     #[account(mut)]
     pub admin: Signer<'info>,
 
-    #[account(
-        mut,
-        token::authority = admin,
-        constraint = token_account.amount == 1,
-    )]
-    pub token_account: Account<'info, TokenAccount>,
+    ///CHECK:
+    #[account()]
+    pub server_token: AccountInfo<'info>,
 
     #[account(
         init,
         payer = admin,
-        seeds = [SEED_SERVER_PROFILE, token_account.mint.as_ref()],
+        seeds = [SEED_SERVER_PROFILE, server_token.key().as_ref()],
         bump,
         space= ServerState::MAX_SIZE,
     )]
@@ -116,16 +116,15 @@ pub struct AUpdateServerDetails<'info> {
         seeds = [
             b"metadata",
             mpl_token_metadata::id().as_ref(),
-            token_account.mint.as_ref(),
+            server_token.key().as_ref(),
         ],
         bump, 
     )]
     pub metadata_account: AccountInfo<'info>,
 
-    ///CHECK:
-    #[account(mut)]
-    pub master_edition_account: AccountInfo<'info>,
-
+    /////CHECK:
+    //#[account(mut)]
+    //pub master_edition_account: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
 }

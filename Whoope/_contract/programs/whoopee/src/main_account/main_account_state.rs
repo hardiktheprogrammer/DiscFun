@@ -9,4 +9,12 @@ pub struct MainAccount {
 
 impl MainAccount {
     pub const MAX_SIZE: usize = std::mem::size_of::<MainAccount>();
+
+    pub fn add_server(&mut self) {
+        self.total_servers += 1;
+    }
+
+    pub fn add_user(&mut self) {
+        self.total_users += 1;
+    }
 }

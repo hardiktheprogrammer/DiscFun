@@ -6,3 +6,6 @@ pub use update_server_details::*;
 
 pub mod send_chat;
 pub use send_chat::*;
+
+pub mod join_server;
+pub use join_server::*;
