@@ -9,3 +9,6 @@ pub use send_chat::*;
 
 pub mod join_server;
 pub use join_server::*;
+
+pub mod leave_server;
+pub use leave_server::*;

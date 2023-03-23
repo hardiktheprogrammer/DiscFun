@@ -51,9 +51,13 @@ pub mod whoopee {
         Ok(())
     }
 
-    //TODO: need to think about this
     pub fn join_server(context: Context<AJoinServer>) -> Result<()> {
         server::join_server(context)?;
+        Ok(())
+    }
+
+    pub fn leave_server(context: Context<ALeaveServer>) -> Result<()> {
+        server::leave_server(context)?;
         Ok(())
     }
 

@@ -1,7 +1,7 @@
 use crate::{main_account_state::MainAccount, prelude::*, server_state::ServerState};
-use anchor_spl::token::FreezeAccount;
+use anchor_spl::token::{Burn, Revoke};
 
-pub fn join_server(context: Context<AJoinServer>) -> Result<()> {
+pub fn leave_server(context: Context<ALeaveServer>) -> Result<()> {
     let user = context.accounts.user.to_account_info();
     let user_token_account = context.accounts.user_token_account.to_account_info();
     let server_token = context.accounts.server_token.to_account_info();
@@ -29,24 +29,39 @@ pub fn join_server(context: Context<AJoinServer>) -> Result<()> {
         1,
     )?;
 
-    //NOTE: freezing the user token account so that user can't transfer the server token.
-    let cpi_accounts = FreezeAccount {
+    //NOTE: unfreezing the user token account so that user can't transfer the server token.
+    let cpi_accounts = Revoke {
         authority: server_account,
-        mint: server_token.to_account_info(),
-        account: user_token_account,
+        source: user_token_account.to_account_info(),
     };
 
-    token::freeze_account(CpiContext::new_with_signer(
+    token::revoke(CpiContext::new_with_signer(
         token_program.to_account_info(),
         cpi_accounts,
         &[&[SEED_SERVER_PROFILE, server_token.key().as_ref(), &[_bump]]],
     ))?;
 
+    //NOTE: Burn a token which represnat you don't have server token you can't chat.
+    let cpi_accounts = Burn {
+        authority: user,
+        mint: server_token.to_account_info(),
+        from: user_token_account.to_account_info(),
+    };
+
+    token::burn(
+        CpiContext::new_with_signer(
+            token_program.to_account_info(),
+            cpi_accounts,
+            &[&[SEED_SERVER_PROFILE, server_token.key().as_ref(), &[_bump]]],
+        ),
+        1,
+    )?;
+
     Ok(())
 }
 
 #[derive(Accounts)]
-pub struct AJoinServer<'info> {
+pub struct ALeaveServer<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 
