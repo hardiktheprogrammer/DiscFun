@@ -29,6 +29,7 @@ pub mod whoopee {
     //     Ok(())
     // }
 
+    //NOTE: Uesr side (for server admin)
     pub fn create_server(
         context: Context<ACreateServer>,
         name: [u8; MAX_NAME_SIZE],
@@ -63,6 +64,25 @@ pub mod whoopee {
 
     pub fn send_chat(context: Context<ASendChat>, chat: Vec<u8>) -> Result<()> {
         server::send_chat(context, chat)?;
+        Ok(())
+    }
+
+    //NOTE: Uesr side (for user profile)
+    pub fn create_profile(
+        context: Context<ACreateProfile>,
+        name: [u8; MAX_NAME_SIZE],
+        summary: [u8; MAX_SERVER_SUMMARY_SIZE],
+    ) -> Result<()> {
+        user::create_profile(context, name, summary)?;
+        Ok(())
+    }
+
+    pub fn update_profile(
+        context: Context<AUpdateProfile>,
+        name: [u8; MAX_NAME_SIZE],
+        summary: [u8; MAX_SERVER_SUMMARY_SIZE],
+    ) -> Result<()> {
+        user::update_profile(context, name, summary)?;
         Ok(())
     }
 }

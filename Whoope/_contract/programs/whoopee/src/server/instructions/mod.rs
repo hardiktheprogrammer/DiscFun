@@ -4,6 +4,9 @@ pub mod update_server_details;
 pub use create_server::*;
 pub use update_server_details::*;
 
+pub mod init_user_server_profile;
+pub use init_user_server_profile::*;
+
 pub mod send_chat;
 pub use send_chat::*;
 

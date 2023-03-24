@@ -2,7 +2,7 @@ use crate::{
     constants::{MAX_NAME_SIZE, MAX_SERVER_SUMMARY_SIZE, SEED_USER_PROFILE},
     user::profile::profile_state::ProfileState,
 };
-pub use anchor_lang::prelude::*;
+use anchor_lang::prelude::*;
 
 pub fn update_profile(
     context: Context<AUpdateProfile>,

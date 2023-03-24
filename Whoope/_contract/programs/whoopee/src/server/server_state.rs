@@ -17,8 +17,8 @@ impl ServerState {
     pub const MAX_SIZE: usize = std::mem::size_of::<Self>();
 }
 
-///SEED = `UserId` + `ServerToken`
-///I will init on server joining.
+///SEED = `SEED_USER_SERVER_PROFILE` + `UserId` + `ServerToken`
+///It have to be init before joining to the server.
 #[account]
 pub struct UserServerProfile {
     pub xq: i64,

@@ -106,6 +106,10 @@ pub fn create_server(
 
     //NOTE: increasing server count in main_account struct.
     main_account.add_server();
+    
+    //NOTE: also need to add admin to the sever
+    //TODO: IDK how to call whoopy::cpi::join_server function direct so currently i just rewrite
+    //join_server functionality
 
     Ok(())
 }
@@ -121,7 +125,6 @@ pub struct ACreateServer<'info> {
 
     #[account(
         mut,
-        // mint::authority = admin, 
         mint::authority = server_account, 
         mint::decimals = 0,
         constraint = server_token.supply == 0, //NOTE: one token should minted by adming them self.

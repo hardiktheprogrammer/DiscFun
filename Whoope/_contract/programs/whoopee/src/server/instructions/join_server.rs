@@ -1,4 +1,8 @@
-use crate::{main_account_state::MainAccount, prelude::*, server_state::ServerState};
+use crate::{
+    main_account_state::MainAccount,
+    prelude::*,
+    server_state::{ServerState, UserServerProfile},
+};
 use anchor_spl::token::FreezeAccount;
 
 pub fn join_server(context: Context<AJoinServer>) -> Result<()> {
@@ -7,7 +11,7 @@ pub fn join_server(context: Context<AJoinServer>) -> Result<()> {
     let server_token = context.accounts.server_token.to_account_info();
     let server_account = context.accounts.server_account.to_account_info();
     let token_program = context.accounts.token_program.to_account_info();
-    let main_account = context.accounts.main_account.to_account_info();
+    // let main_account = context.accounts.main_account.to_account_info();
 
     let (_, _bump) = Pubkey::find_program_address(
         &[SEED_SERVER_PROFILE, server_token.key().as_ref()],
@@ -58,6 +62,14 @@ pub struct AJoinServer<'info> {
     )]
     pub user_token_account: Account<'info, TokenAccount>,
 
+    ///NOTE: To join the server user have to init first their `USER_SERVER_PROFILE_ACCOUNT` first:
+    #[account(
+        mut,
+        seeds = [SEED_USER_SERVER_PROFILE, user.key().as_ref(), server_token.key().as_ref()],
+        bump,
+    )]
+    pub user_server_profile_account: Account<'info, UserServerProfile>,
+
     ///CHECK:
     #[account(mut)]
     pub server_token: AccountInfo<'info>,
@@ -69,12 +81,12 @@ pub struct AJoinServer<'info> {
     )]
     pub server_account: Account<'info, ServerState>,
 
-    #[account(
-        mut,
-        seeds = [SEED_MAIN],
-        bump,
-    )]
-    pub main_account: Account<'info, MainAccount>,
+    // #[account(
+    //     mut,
+    //     seeds = [SEED_MAIN],
+    //     bump,
+    // )]
+    // pub main_account: Account<'info, MainAccount>,
 
     pub token_program: Program<'info, Token>,
 }
