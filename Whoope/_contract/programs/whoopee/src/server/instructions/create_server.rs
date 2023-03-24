@@ -1,6 +1,6 @@
 use super::super::server_state::ServerState;
 use crate::{
-    main_account::main_account_state::MainAccount, prelude::*, AJoinServer,
+    main_account::main_account_state::MainAccount, prelude::*,
     _utils::parse_buffer_to_string,
 };
 use anchor_lang::solana_program::program::{invoke, invoke_signed};
@@ -170,6 +170,7 @@ pub struct ACreateServer<'info> {
     //     mut,
     // )]
     // pub master_edition_account: AccountInfo<'info>,
+
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
 }

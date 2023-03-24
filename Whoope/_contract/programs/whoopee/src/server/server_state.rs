@@ -28,3 +28,14 @@ pub struct UserServerProfile {
 impl UserServerProfile {
     pub const MAX_SIZE: usize = std::mem::size_of::<Self>();
 }
+
+///SEED = `SEED_SERVER_SECTION` + `ServerToken` + `$section_name`
+#[account]
+pub struct ServerSection {
+    pub section_name: [u8; MAX_SERVER_SECTION_NAME_SIZE],
+    pub section_details: [u8; 256],
+}
+
+impl ServerSection {
+    pub const MAX_SIZE: usize = std::mem::size_of::<Self>();
+}

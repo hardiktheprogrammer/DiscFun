@@ -1,8 +1,11 @@
 pub mod create_server;
-pub mod update_server_details;
-
 pub use create_server::*;
+
+pub mod update_server_details;
 pub use update_server_details::*;
+
+pub mod create_server_section;
+pub use create_server_section::*;
 
 pub mod init_user_server_profile;
 pub use init_user_server_profile::*;

@@ -122,9 +122,6 @@ pub struct AUpdateServerDetails<'info> {
     )]
     pub metadata_account: AccountInfo<'info>,
 
-    /////CHECK:
-    //#[account(mut)]
-    //pub master_edition_account: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
 }

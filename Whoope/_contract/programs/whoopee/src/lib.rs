@@ -52,6 +52,20 @@ pub mod whoopee {
         Ok(())
     }
 
+    pub fn create_server_scection(
+        context: Context<ACreateServerSection>,
+        section_name: [u8; MAX_SERVER_SECTION_NAME_SIZE],
+        section_details: [u8; MAX_SERVER_SECTION_DETAILS_SIZE],
+    ) -> Result<()> {
+        server::create_server_section(context, section_name, section_details)?;
+        Ok(())
+    }
+
+    pub fn init_user_server_profile(context: Context<AInitUserServerProfile>) -> Result<()> {
+        server::init_user_server_profile(context)?;
+        Ok(())
+    }
+
     pub fn join_server(context: Context<AJoinServer>) -> Result<()> {
         server::join_server(context)?;
         Ok(())
